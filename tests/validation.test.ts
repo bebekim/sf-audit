@@ -4,9 +4,8 @@
  * Deliberately breaks healthy org data and checks that validation catches each violation.
  */
 import { describe, it, expect } from 'vitest';
-import { validate } from '../src/audit/validation.js';
+import { validate, type BaselineResults } from '../src/audit/index.js';
 import { healthyOrg } from './fixtures.js';
-import { BaselineResults } from '../src/audit/types.js';
 
 function cloneOrg(org: BaselineResults): BaselineResults {
   return JSON.parse(JSON.stringify(org));

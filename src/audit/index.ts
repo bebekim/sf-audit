@@ -1,9 +1,4 @@
-/**
- * Audit module barrel export.
- *
- * Everything the audit module exposes to the outside world.
- * Migration (or any other consumer) imports from here.
- */
+/** Audit module public API. */
 export { SalesforceClient } from './client.js';
 export { runQuery, runToolingQuery, countFrom, recordsFrom } from './query-helper.js';
 export { runBaseline } from './baseline.js';

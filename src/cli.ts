@@ -17,8 +17,7 @@
  * or from /config/salesforce.json (container mount).
  */
 import fs from 'node:fs';
-import { SalesforceClient, runBaseline, validate, score, prescribe } from './audit/index.js';
-import type { QueryError } from './audit/types.js';
+import { SalesforceClient, runBaseline, validate, score, prescribe, type QueryError } from './audit/index.js';
 import { discover } from './migration/discovery.js';
 import { generatePlan } from './migration/plan.js';
 

@@ -6,9 +6,7 @@
  */
 import fs from 'node:fs';
 import path from 'node:path';
-import { SalesforceClient } from '../audit/client.js';
-import { QueryError, SFQueryResult } from '../audit/types.js';
-import { runQuery } from '../audit/query-helper.js';
+import { SalesforceClient, runQuery, type QueryError, type SFQueryResult } from '../audit/index.js';
 import { MigrationPlan, ObjectMapping, ExtractionResult } from './types.js';
 
 const BATCH_SIZE = 2000;
