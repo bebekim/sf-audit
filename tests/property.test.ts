@@ -6,10 +6,10 @@
  * "Healthy org always scores higher than neglected org." (monotonicity)
  */
 import { describe, it, expect } from 'vitest';
-import { validate } from '../src/validation.js';
-import { score } from '../src/scoring.js';
+import { validate } from '../src/audit/validation.js';
+import { score } from '../src/audit/scoring.js';
 import { healthyOrg, neglectedOrg, misfitOrg, brokenOrg } from './fixtures.js';
-import { AuditScore } from '../src/types.js';
+import { AuditScore } from '../src/audit/types.js';
 
 function scoreOrg(results: typeof healthyOrg): AuditScore {
   const validation = validate(results);

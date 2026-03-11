@@ -1,22 +1,12 @@
 /**
  * Barrel export for library usage.
+ *
+ * Re-exports from the two separate modules so consumers can
+ * import from the package root if they want everything.
  */
-export { SalesforceClient } from './client.js';
-export { runBaseline } from './baseline.js';
-export { validate } from './validation.js';
-export { score } from './scoring.js';
-export { prescribe } from './prescription.js';
-export {
-  createCuriosityState,
-  observeOrientation,
-  observeAdoption,
-  observeCustomisation,
-  observeDataHealth,
-  isSufficient,
-  nextQuestion,
-  recordAnswer,
-} from './curiosity.js';
-export type * from './types.js';
+
+// Audit module
+export * from './audit/index.js';
 
 // Migration module
 export * from './migration/index.js';

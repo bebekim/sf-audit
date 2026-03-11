@@ -7,7 +7,7 @@
  * - Misfit: inventory org on Salesforce, should score SIMPLIFY
  * - Broken: half the queries failed
  */
-import { BaselineResults } from '../src/types.js';
+import { BaselineResults } from '../src/audit/types.js';
 
 export const healthyOrg: BaselineResults = {
   timestamp: '2026-03-07T00:00:00Z',

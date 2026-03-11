@@ -17,14 +17,10 @@
  * or from /config/salesforce.json (container mount).
  */
 import fs from 'node:fs';
-import { SalesforceClient } from './client.js';
-import { runBaseline } from './baseline.js';
-import { validate } from './validation.js';
-import { score } from './scoring.js';
-import { prescribe } from './prescription.js';
+import { SalesforceClient, runBaseline, validate, score, prescribe } from './audit/index.js';
+import type { QueryError } from './audit/types.js';
 import { discover } from './migration/discovery.js';
 import { generatePlan } from './migration/plan.js';
-import { QueryError } from './types.js';
 
 interface SFConfig {
   accessToken: string;
