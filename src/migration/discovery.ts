@@ -4,9 +4,7 @@
  * Describes all objects with records, builds the relationship DAG,
  * classifies relationships, and produces the insertion order.
  */
-import { SalesforceClient } from '../client.js';
-import { QueryError } from '../types.js';
-import { runQuery, countFrom } from '../query-helper.js';
+import { SalesforceClient, runQuery, countFrom, type QueryError } from '../audit/index.js';
 import { buildGraph, detectCircularDependencies } from './graph.js';
 import {
   DiscoveryResult,
