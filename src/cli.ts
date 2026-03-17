@@ -17,9 +17,7 @@
  * or from /config/salesforce.json (container mount).
  */
 import fs from 'node:fs';
-import { SalesforceClient, runBaseline, validate, score, prescribe, type QueryError } from './audit/index.js';
-import { discover } from './migration/discovery.js';
-import { generatePlan } from './migration/plan.js';
+import { SalesforceClient, runBaseline, validate, score, prescribe } from './audit/index.js';
 
 interface SFConfig {
   accessToken: string;
@@ -105,9 +103,6 @@ async function main(): Promise<void> {
         'describe-global': 'List all objects',
         limits: 'Show API limits',
         packages: 'List installed packages',
-        'migrate discover': 'Discover schema and build dependency graph',
-        'migrate plan': 'Generate migration plan from discovery results',
-        'migrate status': 'Show migration state',
       },
       config: 'Set SF_ACCESS_TOKEN and SF_INSTANCE_URL env vars, or provide salesforce.json',
     });
@@ -260,94 +255,10 @@ async function main(): Promise<void> {
       break;
     }
 
-    case 'migrate': {
-      const subCommand = args[1];
-
-      if (subCommand === 'discover') {
-        const outputDir = args[2] || '.';
-        if (outputDir !== '.') {
-          fs.mkdirSync(outputDir, { recursive: true });
-        }
-
-        const errors: QueryError[] = [];
-        const discovery = await discover(client, errors);
-
-        if (!discovery) {
-          output({ error: 'Discovery failed', errors });
-          process.exit(1);
-        }
-
-        fs.writeFileSync(
-          `${outputDir}/discovery.json`,
-          JSON.stringify(discovery, null, 2),
-        );
-
-        output({
-          objects: discovery.objects.length,
-          totalRecords: discovery.objects.reduce((s, o) => s + o.recordCount, 0),
-          levels: discovery.insertionOrder.length,
-          insertionOrder: discovery.insertionOrder,
-          circularDependencies: discovery.circularDependencies,
-          unmappedObjects: discovery.unmappedObjects,
-          errors: errors.length,
-          file: `${outputDir}/discovery.json`,
-        });
-
-      } else if (subCommand === 'plan') {
-        const discoveryPath = args[2] || './discovery.json';
-        if (!fs.existsSync(discoveryPath)) {
-          console.error(`Discovery file not found: ${discoveryPath}`);
-          console.error('Run "sf-audit migrate discover" first.');
-          process.exit(1);
-        }
-
-        const discovery = JSON.parse(fs.readFileSync(discoveryPath, 'utf-8'));
-        const plan = generatePlan(discovery);
-
-        const outputDir = args[3] || '.';
-        if (outputDir !== '.') {
-          fs.mkdirSync(outputDir, { recursive: true });
-        }
-
-        fs.writeFileSync(
-          `${outputDir}/migration-plan.json`,
-          JSON.stringify(plan, null, 2),
-        );
-
-        output({
-          mappedObjects: plan.objectMappings.filter((m) => m.mappingType !== 'skip').length,
-          skippedObjects: plan.objectMappings.filter((m) => m.mappingType === 'skip').length,
-          estimatedRecords: plan.estimatedRecords,
-          warnings: plan.warnings,
-          file: `${outputDir}/migration-plan.json`,
-        });
-
-      } else if (subCommand === 'status') {
-        // Check for existing discovery/plan files
-        const discoveryExists = fs.existsSync('./discovery.json');
-        const planExists = fs.existsSync('./migration-plan.json');
-
-        output({
-          discoveryComplete: discoveryExists,
-          planComplete: planExists,
-          nextStep: !discoveryExists
-            ? 'Run: sf-audit migrate discover'
-            : !planExists
-              ? 'Run: sf-audit migrate plan'
-              : 'Review migration-plan.json, then run: sf-audit migrate execute --confirm',
-        });
-
-      } else {
-        console.error('Usage: sf-audit migrate <discover|plan|status>');
-        process.exit(1);
-      }
-      break;
-    }
-
     default:
       console.error(`Unknown command: ${command}`);
       console.error(
-        'Valid commands: baseline, score, query, describe, describe-global, limits, packages, migrate',
+        'Valid commands: baseline, score, query, describe, describe-global, limits, packages',
       );
       process.exit(1);
   }
